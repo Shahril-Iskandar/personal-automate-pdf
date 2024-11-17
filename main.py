@@ -300,7 +300,7 @@ for page_id, page_info in fundswitch_page_dict.items():
         'Date': datetime.now().strftime("%d/%m/%Y")
     })
 
-    write_to_pdf(entry_data, output_file_name=f'FundswitchForm_{client_name}.pdf')
+    write_to_pdf(entry_data, output_file_name=f'created_pdf/FundswitchForm_{client_name}.pdf')
 
     # Update the Notion Fundswitch database
     update_notion_data = {
