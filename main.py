@@ -20,45 +20,6 @@ headers = {
     "Notion-Version": "2022-06-28",
 }
 
-# entry_data = {
-#     "Policy Number": "",
-#     "Name of Policyholder AssigneeTrustee": "",
-#     "NRIC No": "",
-#     "Name of Life Assured": "",
-#     "NRIC No_2": "",
-#     # "Check Box1": True,
-
-#     "Switch Out From Fund Name Or Fund CodeRow1": "",
-#     "Allocation Row1": "",
-#     "Switch In To Fund Name Or Fund CodeRow1": "",
-#     "Allocation Row1_2": "",
-
-#     "Switch Out From Fund Name Or Fund CodeRow2": "",
-#     "Allocation Row2": "",
-#     "Switch In To Fund Name Or Fund CodeRow2": "",
-#     "Allocation Row2_2": "",
-
-#     "Switch Out From Fund Name Or Fund CodeRow3": "",
-#     "Allocation Row3": "",
-#     "Switch In To Fund Name Or Fund CodeRow2": "",
-#     "Allocation Row3_2": "",
-
-#     "Switch Out From Fund Name Or Fund CodeRow4": "",
-#     "Allocation Row4": "",
-#     "Switch In To Fund Name Or Fund CodeRow2": "",
-#     "Allocation Row4_2": "",
-
-#     "Switch Out From Fund Name Or Fund CodeRow5": "",
-#     "Allocation Row5": "",
-#     "Switch In To Fund Name Or Fund CodeRow2": "",
-#     "Allocation Row5_2": "",
-
-#     "Redirect to target fund names or fund codesRow1": "United SGD Fund",
-#     "New allocation Row1": "100",
-#     "DATE": "01/01/2021", # Page 5 date
-#     "Date": "01/01/2024", # Page 10 date
-# }
-
 def get_json_file(data, file_name='db.json'):
     with open(file_name, 'w', encoding='utf8') as f:
         json.dump(data, f, ensure_ascii=False, indent=4)
