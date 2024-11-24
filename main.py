@@ -3,6 +3,7 @@ import requests
 import json
 from datetime import datetime
 import pymupdf
+import os
 
 secrets = dotenv_values(".env")
 
@@ -198,7 +199,23 @@ def match_policy_id_number(policies_number_page_dict, policy_id):
         # print(f"Policy ID: {policy_id} has Policy Number: {policy_number}")
     return policy_number
 
-def write_to_pdf(entry_data, source_file_name='FundswitchForm.pdf', output_file_name='FundswitchForm_filled.pdf'):
+def write_to_pdf(entry_data, client_name, existing_pdf_path='existing_pdf', main_source_file='FundswitchForm.pdf'):
+    # Check if the client's PDF already exists in the existing folder
+    existing_pdf = [os.path.splitext(pdf)[0] for pdf in os.listdir(existing_pdf_path) if pdf.endswith(".pdf")]
+
+    if client_name in existing_pdf:
+        # Use the existing PDF
+        source_file_name = os.path.join(existing_pdf_path, f"{client_name}.pdf")
+        print(f"Using existing PDF for client: {client_name}")
+    else:
+        # Use the default source file
+        source_file_name = main_source_file
+        print(f"No existing PDF for {client_name}, using the default PDF file.")
+
+    # Output file name
+    output_file_name = f'created_pdf/FundswitchForm_{client_name}.pdf'
+
+    # Open and edit the PDF
     doc = pymupdf.open(source_file_name)
 
     for page in doc:
@@ -209,12 +226,21 @@ def write_to_pdf(entry_data, source_file_name='FundswitchForm.pdf', output_file_
                 field.update()
 
     doc.save(output_file_name)
+    print(f"PDF saved as {output_file_name}")
 
+## Main code
+print("Getting Fundswitch database data...")
 fundswitch_pages = get_notion_database_pages(FUNDSWITCH_DATABASE_ID)
+print("Extracting Fundswitch database data...")
 fundswitch_page_dict = extracting_fundswitch_database_page(fundswitch_pages)
 
+print("Getting all client IDs and names...")
 all_client_ids_names = get_all_client_ids_names()
+print("Getting all policy numbers and IDs...")
 all_policy_numbers_ids = find_all_policy_numbers_ids()
+
+existing_pdf_path = 'existing_pdf/'
+existing_pdf = []
 
 for page_id, page_info in fundswitch_page_dict.items():
     entry_data = {
@@ -300,7 +326,7 @@ for page_id, page_info in fundswitch_page_dict.items():
         'Date': datetime.now().strftime("%d/%m/%Y")
     })
 
-    write_to_pdf(entry_data, output_file_name=f'created_pdf/FundswitchForm_{client_name}.pdf')
+    write_to_pdf(entry_data, client_name)
 
     # Update the Notion Fundswitch database
     update_notion_data = {
@@ -311,3 +337,5 @@ for page_id, page_info in fundswitch_page_dict.items():
     }
     
     update_notion_database(page_id, update_notion_data)
+
+    # TODO: See if can check the full fundswitch pages for previous PDFs and update the PDF filename to increment the number
